@@ -1,0 +1,61 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 2
+  tags:
+  - blue
+  - sub
+  - add
+  - mul
+  - div
+  - obstacle
+  - Obstacle_left_right
+  - Obstacle_up_down
+  - Obstacle_rotate
+  - GateSerie
+  - result
+  - ObstacleSerie
+  - triggerwin
+  - winroad
+  - RotatingObstacle
+  - StandingObstacle
+  - UpdownObstacle
+  - triggerwar
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - 
+  - Water
+  - UI
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: Default
+    uniqueID: 0
+    locked: 0
