@@ -130,6 +130,8 @@ public class War : MonoBehaviour
     }
     public void StartWar()
     {
+        if(startWar == false)
+        {
         MusicControl.musicInstance.CallSound("warmusic");
         ReLocateLevel();
         Gamemanager.GameManagerInstance.levelObj.transform.parent = levelloc.transform ;
@@ -142,7 +144,7 @@ public class War : MonoBehaviour
         startWar = true;
         Gamemanager.GameManagerInstance.organiserTime = 0;
         WaitAnimation();
-        
+        }     
     }
     public void FormAllies()
     {
@@ -262,6 +264,7 @@ public class War : MonoBehaviour
                Gamemanager.GameManagerInstance.score.ShowScore();
                scoreShown = true;
                }
+               MusicControl.musicInstance.CallSound("victorymusic");
                textmeshPro.SetText("<uppercase>VICTORY! \n Score: <uppercase>" + Gamemanager.GameManagerInstance.score.currentScorelast);
                Gamemanager.GameManagerInstance.restartButton.transform.GetChild(0).gameObject.GetComponent<TextMeshPro>().fontSize = 1.3f;
                Gamemanager.GameManagerInstance.restartButton.transform.GetChild(0).gameObject.GetComponent<TextMeshPro>().SetText("<uppercase>Next Level<uppercase>");
@@ -270,10 +273,13 @@ public class War : MonoBehaviour
            else
            {
                textmeshPro.SetText("<uppercase><color=#FF0000>GAME OVER <uppercase></color>");
+              // MusicControl.musicInstance.CallSound("gameovermusic");
+               //MusicControl.musicInstance.StopSound();
+               Debug.LogWarning("SOUND STOPED");
            }
            gameOverTag.SetActive(true);
            ReLocateLevel();
-           MusicControl.musicInstance.StopSound();
+          // MusicControl.musicInstance.StopSound();
         }
        // else
       //  {

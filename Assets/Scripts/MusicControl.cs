@@ -12,6 +12,8 @@ public class MusicControl : MonoBehaviour
     //private AudioSource currrentAudio;
     [SerializeField] private GameObject backGroundMusic;
     [SerializeField] private GameObject warMusic;
+    [SerializeField] private GameObject victoryMusic;
+    [SerializeField] private GameObject gameOverMusic;
     private AudioSource currentAudio;
 
     //private bool mute;
@@ -35,6 +37,14 @@ public class MusicControl : MonoBehaviour
         if(type.Equals("warmusic"))
         {
             currentAudio =  warMusic.GetComponent<AudioSource>();
+        }
+        if(type.Equals("victorymusic"))
+        {
+            currentAudio =  victoryMusic.GetComponent<AudioSource>();
+        }
+        if(type.Equals("gameovermusic"))
+        {
+            currentAudio =  gameOverMusic.GetComponent<AudioSource>();
         }
 
         if(Gamemanager.GameManagerInstance.dataBase.mute.Equals("false"))

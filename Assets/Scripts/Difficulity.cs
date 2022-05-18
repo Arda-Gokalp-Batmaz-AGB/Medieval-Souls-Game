@@ -15,7 +15,7 @@ public class Difficulity
     public void SetRoadLength()
     {
         int level = Gamemanager.GameManagerInstance.dataBase.currentLevel;
-        RandomLevelGenerator.RandomLevelGeneratorInstance.roadLength = 1;
+        RandomLevelGenerator.RandomLevelGeneratorInstance.roadLength = 20;
         for (int i = 1; i < level+1; i++)
         {
             if(i != 0 && i % 4 == 0)

@@ -44,6 +44,8 @@ public class Gamemanager : MonoBehaviour
     public int organiserTime;
 
     private bool musicStarted; 
+
+    private bool gameovermusiccalled;
     void Start()
     {
        // Debug.LogWarning(test.text);
@@ -70,6 +72,7 @@ public class Gamemanager : MonoBehaviour
         SetTables();
         UpdateLevelTag();
         musicStarted = false;
+        gameovermusiccalled = false;
     }
     
      private void SetResolution() {
@@ -235,6 +238,12 @@ public void UpdateCountTag()
     }
     else
     {
+    if(gameovermusiccalled == false)
+    {
+        MusicControl.musicInstance.CallSound("gameovermusic");
+        gameovermusiccalled = true;
+    }
+    Debug.LogWarning("ttttt");
     textmeshPro.SetText("<color=#FF0000><uppercase>GAME OVER<uppercase></color>");
     Vector3 loc = new Vector3(restartButton.transform.position.x,restartButton.transform.position.y+0.6f,restartButton.transform.position.z);
     //
@@ -243,7 +252,7 @@ public void UpdateCountTag()
     PlayerCountTag.transform.position = loc;
     PlayerCountTag.transform.localScale = new Vector3(0.62f,0.62f,0.62f);
     stopMovement = true;
-    MusicControl.musicInstance.StopSound();
+   // MusicControl.musicInstance.StopSound();
     }
     if((gameWon == true || Balls.Count <= 0) && writeDataBase == true)
     {
