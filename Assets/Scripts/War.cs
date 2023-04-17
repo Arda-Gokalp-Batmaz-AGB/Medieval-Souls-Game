@@ -287,7 +287,7 @@ public class War : MonoBehaviour
        // AddEnemies();
         UpdateCountTag(); 
         ReOrganiseEnemies();
-        Gamemanager.GameManagerInstance.ReOrganiseBalls();
+        Gamemanager.GameManagerInstance.ReOrganiseArmy();
         //UpdateCountTag();
         isThreadExecuting = false;
       //  }

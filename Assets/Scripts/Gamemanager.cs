@@ -16,39 +16,39 @@ public class Gamemanager : MonoBehaviour
     private Vector3 _mouseStartPos, PlayerStartPos;
     [SerializeField] public float RoadSpeed, SwipeSpeed,Distance;
     [SerializeField] private GameObject Road;
-    [SerializeField] public GameObject AllocatedArmy;
-    [SerializeField] public GameObject PlayerCountTag;
+    [SerializeField] public GameObject AllocatedArmy; // Max army size
+    [SerializeField] public GameObject PlayerCountTag; //Holds the location which shows army count
 
-    [SerializeField] public GameObject restartButton;
+    [SerializeField] public GameObject restartButton; // Restart button object
 
-    [SerializeField] public GameObject levelTag;
-    [SerializeField] public GameObject levelObj;
-    [SerializeField] public GameObject totalScoreTag;
-    [SerializeField] public GameObject highestScoreTag;
-    [SerializeField] public GameObject musicObj;
-    public static Gamemanager GameManagerInstance;
-    public Camera mainCam;
-    public List<GameObject> Army = new List<GameObject>();
-    public GameObject NewSoldier;
-    public ParticleSystem Explosion;
+    [SerializeField] public GameObject levelTag;  //Holds the location which shows current level
+    [SerializeField] public GameObject levelObj; //Holds the level object
+    [SerializeField] public GameObject totalScoreTag; //Holds the location which shows total score
+    [SerializeField] public GameObject highestScoreTag;  //Holds the location which shows highest score
+    [SerializeField] public GameObject musicObj; // Music open/close button object
+    public static Gamemanager GameManagerInstance; // Instance of object itself
+    public Camera mainCam; // Maincam of the game
+    public List<GameObject> Army = new List<GameObject>(); // Current army of the user
+    public GameObject NewSoldier; // New soldier which will be added on the army
+    public ParticleSystem Explosion; // Explosion particle effect object
 
-    public bool gameWon;
-    private bool isThreadExecuting = false;
+    public bool gameWon; // States if game is won or not
+    private bool isThreadExecuting = false; // Checks if army organizing works
 
-    public DataSaveLoad dataBase;
-    private bool writeDataBase;
+    public DataSaveLoad dataBase; // Database of the game
+    private bool writeDataBase; // Is database write is allowed
 
-    public Difficulity difficulity;
+    public Difficulity difficulity; // Difficulty object
 
-    public Score score;
+    public Score score; // Score object
 
-    public bool stopMovement;
+    public bool stopMovement; // States if movement allowed
 
-    public int organiserTime;
+    public int organiserTime; // Indicates timer of army organiser
 
-    private bool musicStarted; 
+    private bool musicStarted; //Indicates if game music is started
 
-    private bool gameovermusiccalled;
+    private bool gameovermusiccalled; // States if gameover music is called
 
     /* 
         This function works on the game starts
@@ -67,19 +67,29 @@ public class Gamemanager : MonoBehaviour
         difficulity.SetRoadSpeed(); // Sets road speed according to difficulty
         Debug.LogWarning("CUrrent level : " + dataBase.currentLevel);
         Debug.LogWarning("Set road speed : " + RoadSpeed);
-        DeActivateAllocations(); //
-        Gamemanager.GameManagerInstance.AllocatedArmy.transform.GetChild(0).gameObject.SetActive(true);
+        DeActivateAllocations(); // Deactivates all army on the start
+
+        // Activates first soldier in the army
+        Gamemanager.GameManagerInstance.AllocatedArmy.transform.GetChild(0).gameObject.SetActive(true); 
         Army.Add(Gamemanager.GameManagerInstance.AllocatedArmy.transform.GetChild(0).gameObject);
-        restartButton.SetActive(false);
+
+        restartButton.SetActive(false); //Disables restart button on start
+
+        // Initialises relevant variables
         gameWon = false;
         stopMovement = false;
         organiserTime = 1;
-        SetTables();
-        UpdateLevelTag();
+
+
+        SetTables(); // Activates objects which shows current and highest
+        UpdateLevelTag(); // Activates the object which shows user level
         musicStarted = false;
         gameovermusiccalled = false;
     }
     
+    /*
+        Sets the resolution of the game, will be used in the future
+    */
      private void SetResolution() {
         // var height = (int)(dataBase.resulotionHeight * 0.8f);
         // var width = (int)(dataBase.resulotionWidth * 0.8f); 
@@ -87,12 +97,17 @@ public class Gamemanager : MonoBehaviour
         // Debug.LogWarning("Height:"+height + " Width:" + width);
       }
       
+    /*
+      This method works on every frame 
+      in order to update the game and manage the game loop
+    */
     void Update()
     {
-        GameContinues();
-        UpdateCountTag();
-        HideTables();
+        GameContinues(); // Checks if game still going on
+        UpdateCountTag(); // Updates the indicator that shows army count of user
+        HideTables(); // Hides total and highest score
 
+        // Starts the background music on game starts
         if (Input.GetMouseButtonDown(0) && stopMovement == false)
         {
             StartTheGame = MoveByTouch = true;
@@ -107,7 +122,8 @@ public class Gamemanager : MonoBehaviour
         {
             MoveByTouch = false;
         }
-
+        // Allows the user to move the army by swiping the mouse left and right
+        // Some physical calculations are used in order to provide this functionality
         if (MoveByTouch)
         {
             var plane = new Plane(Vector3.up, 0f);
@@ -132,13 +148,18 @@ public class Gamemanager : MonoBehaviour
 
             }
         }
-       
-        if (StartTheGame) //Oyun devam ederken yol hareket ediyor
+
+        // In the overall game loop, actually player is not progressing but the road is progressing 
+        // and this code block allows the road to progress in the direction of the player
+        if (StartTheGame) 
             Road.transform.Translate(Vector3.forward * (RoadSpeed * -1 * Time.deltaTime));
 
-        
     }
 
+    /*
+    It is a special frame update method that works after the "update" method is called. 
+    It is preferable, especially for rendering the main camera of the game
+    */
     private void LateUpdate()
     {
         if (StartTheGame)
@@ -148,7 +169,7 @@ public class Gamemanager : MonoBehaviour
 
 
 /* 
-
+    Deactivates all the army on game start
 */
  public void DeActivateAllocations()
  {
@@ -159,6 +180,9 @@ public class Gamemanager : MonoBehaviour
 
  }
 
+/*
+    Deactivates the score objects
+*/
 private void HideTables()
 {
     if(StartTheGame == true)
@@ -168,6 +192,9 @@ private void HideTables()
     }
 }
 
+/*
+    Activates and updates the score values on the total and highest score objects
+*/
 private void SetTables()
 {
     totalScoreTag.transform.parent.gameObject.SetActive(true);
@@ -176,7 +203,7 @@ private void SetTables()
 
     totalScoreTag.GetComponent<TextMeshPro>().SetText(Convert.ToString(dataBase.totalScore));
 }
-public void ReOrganiseBalls()
+public void ReOrganiseArmy()
 {
     if(isThreadExecuting == false)
     {
