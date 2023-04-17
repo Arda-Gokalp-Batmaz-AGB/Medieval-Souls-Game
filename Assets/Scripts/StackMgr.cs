@@ -12,7 +12,7 @@ public class StackMgr : MonoBehaviour
         {
             print("çarpıt");
             Gamemanager.GameManagerInstance.Army.Remove(gameObject);
-            Gamemanager.GameManagerInstance.ReOrganiseBalls();
+            Gamemanager.GameManagerInstance.ReOrganiseArmy();
             //StartCoroutine(Gamemanager.GameManagerInstance.Example());
 
             gameObject.SetActive(false);
