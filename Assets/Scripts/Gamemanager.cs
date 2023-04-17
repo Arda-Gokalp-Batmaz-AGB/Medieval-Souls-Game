@@ -203,6 +203,12 @@ private void SetTables()
 
     totalScoreTag.GetComponent<TextMeshPro>().SetText(Convert.ToString(dataBase.totalScore));
 }
+
+/*
+    When the army is damaged by obstacles on the road, 
+    the game reforms the remaining army in order to preserve the army formation.
+    This operation is a timed operation that works on an alternative thread.
+*/
 public void ReOrganiseArmy()
 {
     if(isThreadExecuting == false)
@@ -211,6 +217,9 @@ public void ReOrganiseArmy()
     
     }
 }
+    /*
+        It is a coroutine thread that reorganizes the formation of the army after some time is passed.
+    */
     public IEnumerator Organiser()
     {
         isThreadExecuting=true;
@@ -239,6 +248,11 @@ public void ReOrganiseArmy()
         isThreadExecuting = false;
 
     }
+
+/*
+    Checks, if the game is finished by the loss which is triggered when the army count drops to 0,
+     or if the win condition is triggered after you successfully defeat the enemy army.
+*/
 public void GameContinues()
 {
     if (Army.Count <= 0 || gameWon == true)
@@ -252,10 +266,14 @@ public void GameContinues()
     } 
 }
 
+/*
+    Updates the army count of the player and 
+    when win condition occurs sets player count to text "Victory Score: ..."
+*/
 public void UpdateCountTag()
 {
     TextMeshPro textmeshPro = PlayerCountTag.GetComponent<TextMeshPro>();
-    if(Army.Count != 0)
+    if(Army.Count != 0) // WIN Condition
     {
         if(gameWon == true)
         {
@@ -267,29 +285,30 @@ public void UpdateCountTag()
             textmeshPro.SetText(Convert.ToString(Army.Count));
         }
     }
-    else
+    else // Lose Condition
     {
+    // Calls game over music when you lose the game
     if(gameovermusiccalled == false)
     {
         MusicControl.musicInstance.CallSound("gameovermusic");
         gameovermusiccalled = true;
     }
-    Debug.LogWarning("ttttt");
     textmeshPro.SetText("<color=#FF0000><uppercase>GAME OVER<uppercase></color>");
     Vector3 loc = new Vector3(restartButton.transform.position.x,restartButton.transform.position.y+0.6f,restartButton.transform.position.z);
 
     PlayerCountTag.transform.SetParent(mainCam.gameObject.transform);
     PlayerCountTag.transform.position = loc;
     PlayerCountTag.transform.localScale = new Vector3(0.62f,0.62f,0.62f);
-    stopMovement = true;
+    stopMovement = true; // Stops movement after game over
 
     }
+    // Updates the database by your new score when you won the game 
     if((gameWon == true || Army.Count <= 0) && writeDataBase == true)
     {
         writeDataBase = false;
         score.SetScore();
         dataBase.totalScore = dataBase.totalScore + score.currentScore;
-        if(score.currentScore > dataBase.HighestScore)
+        if(score.currentScore > dataBase.HighestScore) // Updates highest score
         {
             dataBase.HighestScore = score.currentScore;
         }
@@ -297,11 +316,18 @@ public void UpdateCountTag()
     }
 }
 
+/*
+    Updates the current level of the user
+*/
 private void UpdateLevelTag()
 {
      TextMeshPro textmeshPro = levelTag.GetComponent<TextMeshPro>();
      textmeshPro.SetText("<uppercase>"+dataBase.currentLevel+"<uppercase>");
 }
+    /*
+        Triggers when user quit from the application. 
+        It is also saving mute preference before quitting from the game    
+    */
     void OnApplicationQuit()
     {
         Debug.Log("Application ending after " + Time.time + " seconds");
