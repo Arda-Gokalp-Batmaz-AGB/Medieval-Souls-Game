@@ -25,8 +25,8 @@ public class Gamemanager : MonoBehaviour
    // [SerializeField] public GameObject Edges;
     public static Gamemanager GameManagerInstance;
     public Camera mainCam;//0, 2.5, -10, 25,0,0
-    public List<GameObject> Balls = new List<GameObject>();
-    public GameObject Newball;
+    public List<GameObject> Army = new List<GameObject>();
+    public GameObject NewSoldier;
     public ParticleSystem Explosion;
 
     public bool gameWon;
@@ -64,7 +64,7 @@ public class Gamemanager : MonoBehaviour
         //Balls.Add(gameObject); // İLK ANA TOPU LİSTEYE EKLER
         DeActivateAllocations();
         Gamemanager.GameManagerInstance.AllocatedBalls.transform.GetChild(0).gameObject.SetActive(true);
-        Balls.Add(Gamemanager.GameManagerInstance.AllocatedBalls.transform.GetChild(0).gameObject);
+        Army.Add(Gamemanager.GameManagerInstance.AllocatedBalls.transform.GetChild(0).gameObject);
         restartButton.SetActive(false);
         gameWon = false;
         stopMovement = false;
@@ -186,9 +186,9 @@ public void ReOrganiseBalls()
         yield return new WaitForSeconds(organiserTime);
 
         print("method runs");
-        int counter = Balls.Count;
+        int counter = Army.Count;
         DeActivateAllocations();
-        Balls =  new List<GameObject>();
+        Army =  new List<GameObject>();
         for (int i = 0; i < Gamemanager.GameManagerInstance.AllocatedBalls.transform.childCount; i++)
             {
                 if(counter <= 0)
@@ -201,7 +201,7 @@ public void ReOrganiseBalls()
                     //print("nomash");
                     currentChild.SetActive(true);
                    // currentChild.GetComponent<Renderer>().enabled=true;
-                    Gamemanager.GameManagerInstance.Balls.Add(currentChild);
+                    Gamemanager.GameManagerInstance.Army.Add(currentChild);
                     counter-- ;
                 }
             }
@@ -210,7 +210,7 @@ public void ReOrganiseBalls()
     }
 public void GameContinues()
 {
-    if (Balls.Count <= 0 || gameWon == true)
+    if (Army.Count <= 0 || gameWon == true)
     {
         StartTheGame = false;
         restartButton.SetActive(true);
@@ -224,7 +224,7 @@ public void GameContinues()
 public void UpdateCountTag()
 {
     TextMeshPro textmeshPro = PlayerCountTag.GetComponent<TextMeshPro>();
-    if(Balls.Count != 0)
+    if(Army.Count != 0)
     {
         if(gameWon == true)
         {
@@ -233,7 +233,7 @@ public void UpdateCountTag()
         }
         else
         {
-            textmeshPro.SetText(Convert.ToString(Balls.Count));
+            textmeshPro.SetText(Convert.ToString(Army.Count));
         }
     }
     else
@@ -254,7 +254,7 @@ public void UpdateCountTag()
     stopMovement = true;
    // MusicControl.musicInstance.StopSound();
     }
-    if((gameWon == true || Balls.Count <= 0) && writeDataBase == true)
+    if((gameWon == true || Army.Count <= 0) && writeDataBase == true)
     {
         writeDataBase = false;
         score.SetScore();

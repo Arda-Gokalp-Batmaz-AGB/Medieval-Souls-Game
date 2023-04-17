@@ -99,11 +99,11 @@ public class MathFunctionGenerator
         }
         else if (string.Equals(operationType,"mul"))
         {
-            this.operationResult = Gamemanager.GameManagerInstance.Balls.Count * (operationValue -1);
+            this.operationResult = Gamemanager.GameManagerInstance.Army.Count * (operationValue -1);
         }
         else if (string.Equals(operationType,"div"))
         {
-            this.operationResult = Gamemanager.GameManagerInstance.Balls.Count-Convert.ToInt32(Gamemanager.GameManagerInstance.Balls.Count / (operationValue));
+            this.operationResult = Gamemanager.GameManagerInstance.Army.Count-Convert.ToInt32(Gamemanager.GameManagerInstance.Army.Count / (operationValue));
         }
         return operationResult;
     }

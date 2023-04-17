@@ -45,7 +45,7 @@ public class War : MonoBehaviour
 
     private void WhoWins()
     {
-        if(Enemies.Count <= Gamemanager.GameManagerInstance.Balls.Count)
+        if(Enemies.Count <= Gamemanager.GameManagerInstance.Army.Count)
         {
             youWillWin = true;
         }
@@ -119,7 +119,7 @@ public class War : MonoBehaviour
             if(currentChild.activeInHierarchy == false)//currentChild.GetComponent<Renderer>().enabled==false
             {
                 currentChild.SetActive(true);
-                Gamemanager.GameManagerInstance.Balls.Add(currentChild);
+                Gamemanager.GameManagerInstance.Army.Add(currentChild);
             }
         }
     }
@@ -227,7 +227,7 @@ public class War : MonoBehaviour
         int loopCount = EnemyActiveCount;
         for (int i = 0; i < loopCount; i++)
         {
-            if(i > Gamemanager.GameManagerInstance.Balls.Count || i > Enemies.Count)
+            if(i > Gamemanager.GameManagerInstance.Army.Count || i > Enemies.Count)
             {
                 break;
             }
@@ -236,10 +236,10 @@ public class War : MonoBehaviour
 
             currentAllie.SetActive(false);
             currentEnemy.SetActive(false);
-            Gamemanager.GameManagerInstance.Balls.Remove(currentAllie);
+            Gamemanager.GameManagerInstance.Army.Remove(currentAllie);
             Enemies.Remove(currentEnemy);
         }
-        if(Enemies.Count<=0 || Gamemanager.GameManagerInstance.Balls.Count <= 0)
+        if(Enemies.Count<=0 || Gamemanager.GameManagerInstance.Army.Count <= 0)
         {
            UpdateCountTag(); 
            StopAttackAnimations();
@@ -304,7 +304,7 @@ public class War : MonoBehaviour
             EnemyAnimation.runtimeAnimatorController = anim as RuntimeAnimatorController;//Resources.Load("Infantary 2")
         }
 
-        for (int i = 0; i < Gamemanager.GameManagerInstance.Balls.Count; i++)
+        for (int i = 0; i < Gamemanager.GameManagerInstance.Army.Count; i++)
         {
             Animator allieAnimation = Gamemanager.GameManagerInstance.AllocatedBalls.transform.GetChild(i).GetComponent<Animator>();
             allieAnimation.runtimeAnimatorController = anim as RuntimeAnimatorController;
@@ -322,7 +322,7 @@ public class War : MonoBehaviour
             EnemyAnimation.runtimeAnimatorController = anim as RuntimeAnimatorController;//Resources.Load("Infantary 2")
         }
 
-        for (int i = EnemyActiveCount; i < Gamemanager.GameManagerInstance.Balls.Count; i++)
+        for (int i = EnemyActiveCount; i < Gamemanager.GameManagerInstance.Army.Count; i++)
         {
             Animator allieAnimation = Gamemanager.GameManagerInstance.AllocatedBalls.transform.GetChild(i).GetComponent<Animator>();
          //   allieAnimation.runtimeAnimatorController = animold as RuntimeAnimatorController;

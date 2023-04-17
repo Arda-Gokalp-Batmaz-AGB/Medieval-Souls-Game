@@ -27,7 +27,7 @@ public class MathOperations : MonoBehaviour
                         //print("nomash");
                         currentChild.SetActive(true);
                     // currentChild.GetComponent<Renderer>().enabled=true;
-                        Gamemanager.GameManagerInstance.Balls.Add(currentChild);
+                        Gamemanager.GameManagerInstance.Army.Add(currentChild);
                         NoAdd-- ;
                     }
                     else
@@ -45,18 +45,18 @@ public class MathOperations : MonoBehaviour
                 Gate_data.resultObject.name = Convert.ToString(Gate_data.operation.getResult());
                 var NoSub = Int32.Parse(Gate_data.resultObject.name);
 
-                if(NoSub > Gamemanager.GameManagerInstance.Balls.Count)
+                if(NoSub > Gamemanager.GameManagerInstance.Army.Count)
                 {
-                    NoSub=Gamemanager.GameManagerInstance.Balls.Count;
+                    NoSub=Gamemanager.GameManagerInstance.Army.Count;
                 }
                     for (int i = 0; i < NoSub; i++)
                     {
-                    Gamemanager.GameManagerInstance.Balls.ElementAt( Gamemanager.GameManagerInstance.Balls.Count - 1).gameObject.SetActive(false);
-                    Gamemanager.GameManagerInstance.Balls.RemoveAt(Gamemanager.GameManagerInstance.Balls.Count - 1);
+                    Gamemanager.GameManagerInstance.Army.ElementAt( Gamemanager.GameManagerInstance.Army.Count - 1).gameObject.SetActive(false);
+                    Gamemanager.GameManagerInstance.Army.RemoveAt(Gamemanager.GameManagerInstance.Army.Count - 1);
                     }
-                    if(Gamemanager.GameManagerInstance.Balls.Count - 1 >= 0)
+                    if(Gamemanager.GameManagerInstance.Army.Count - 1 >= 0)
                     Instantiate(Gamemanager.GameManagerInstance.Explosion,   Gamemanager.GameManagerInstance.
-                        Balls.ElementAt(Gamemanager.GameManagerInstance.Balls.Count - 1).transform.position, Quaternion.identity);
+                        Army.ElementAt(Gamemanager.GameManagerInstance.Army.Count - 1).transform.position, Quaternion.identity);
 
                 Gate_data.GetComponent<Collider>().enabled = false;                
             }

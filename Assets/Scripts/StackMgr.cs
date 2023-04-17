@@ -11,7 +11,7 @@ public class StackMgr : MonoBehaviour
         if(other.CompareTag("obstacle"))
         {
             print("çarpıt");
-            Gamemanager.GameManagerInstance.Balls.Remove(gameObject);
+            Gamemanager.GameManagerInstance.Army.Remove(gameObject);
             Gamemanager.GameManagerInstance.ReOrganiseBalls();
             //StartCoroutine(Gamemanager.GameManagerInstance.Example());
 
