@@ -15,13 +15,13 @@ public class MathOperations : MonoBehaviour
                 Gate_data.resultObject.name = Convert.ToString(Gate_data.operation.getResult());
                 var NoAdd = Int32.Parse(Gate_data.resultObject.name);
 
-                for (int i = 0; i < Gamemanager.GameManagerInstance.AllocatedBalls.transform.childCount; i++)
+                for (int i = 0; i < Gamemanager.GameManagerInstance.AllocatedArmy.transform.childCount; i++)
                 {
                     if(NoAdd <= 0)
                     {
                         break;
                     }
-                    GameObject currentChild = Gamemanager.GameManagerInstance.AllocatedBalls.transform.GetChild(i).gameObject;
+                    GameObject currentChild = Gamemanager.GameManagerInstance.AllocatedArmy.transform.GetChild(i).gameObject;
                     if(currentChild.activeInHierarchy == false)//currentChild.GetComponent<Renderer>().enabled==false
                     {
                         //print("nomash");

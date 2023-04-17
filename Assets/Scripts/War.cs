@@ -152,7 +152,7 @@ public class War : MonoBehaviour
         addcam.gameObject.SetActive(true);
         for (int i = 0; i < EnemyActiveCount; i++)
         {
-            GameObject currentChild = Gamemanager.GameManagerInstance.AllocatedBalls.transform.GetChild(i).gameObject;
+            GameObject currentChild = Gamemanager.GameManagerInstance.AllocatedArmy.transform.GetChild(i).gameObject;
             if(currentChild.activeInHierarchy == false)
             {
                 break;
@@ -163,13 +163,13 @@ public class War : MonoBehaviour
                 newPos = new Vector3(newPos.x,newPos.y,newPos.z-2);
                 currentChild.transform.position = newPos;
                 var enemyAnimation = AllocatedEnemies.transform.GetChild(i).GetComponent<Animator>().runtimeAnimatorController;
-                Animator allieAnimation = Gamemanager.GameManagerInstance.AllocatedBalls.transform.GetChild(i).GetComponent<Animator>();
+                Animator allieAnimation = Gamemanager.GameManagerInstance.AllocatedArmy.transform.GetChild(i).GetComponent<Animator>();
                 allieAnimation.runtimeAnimatorController = enemyAnimation as RuntimeAnimatorController;
             }
         }
         int dist = 2;
         int j = 0;
-        for (int i = EnemyActiveCount; i < Gamemanager.GameManagerInstance.AllocatedBalls.transform.childCount; i++)
+        for (int i = EnemyActiveCount; i < Gamemanager.GameManagerInstance.AllocatedArmy.transform.childCount; i++)
         {
             if(j == 11)
                 j=0;
@@ -177,7 +177,7 @@ public class War : MonoBehaviour
             {
                 dist += 2;
             }
-            GameObject currentChild = Gamemanager.GameManagerInstance.AllocatedBalls.transform.GetChild(i).gameObject;
+            GameObject currentChild = Gamemanager.GameManagerInstance.AllocatedArmy.transform.GetChild(i).gameObject;
 
             Vector3 newPos =  AllocatedEnemies.transform.GetChild(j).gameObject.transform.position;
             newPos = new Vector3(newPos.x,newPos.y,newPos.z-dist);
@@ -231,7 +231,7 @@ public class War : MonoBehaviour
             {
                 break;
             }
-            GameObject currentAllie = Gamemanager.GameManagerInstance.AllocatedBalls.transform.GetChild(i).gameObject;
+            GameObject currentAllie = Gamemanager.GameManagerInstance.AllocatedArmy.transform.GetChild(i).gameObject;
             GameObject currentEnemy = AllocatedEnemies.transform.GetChild(i).gameObject;
 
             currentAllie.SetActive(false);
@@ -306,7 +306,7 @@ public class War : MonoBehaviour
 
         for (int i = 0; i < Gamemanager.GameManagerInstance.Army.Count; i++)
         {
-            Animator allieAnimation = Gamemanager.GameManagerInstance.AllocatedBalls.transform.GetChild(i).GetComponent<Animator>();
+            Animator allieAnimation = Gamemanager.GameManagerInstance.AllocatedArmy.transform.GetChild(i).GetComponent<Animator>();
             allieAnimation.runtimeAnimatorController = anim as RuntimeAnimatorController;
         }
     }
@@ -324,7 +324,7 @@ public class War : MonoBehaviour
 
         for (int i = EnemyActiveCount; i < Gamemanager.GameManagerInstance.Army.Count; i++)
         {
-            Animator allieAnimation = Gamemanager.GameManagerInstance.AllocatedBalls.transform.GetChild(i).GetComponent<Animator>();
+            Animator allieAnimation = Gamemanager.GameManagerInstance.AllocatedArmy.transform.GetChild(i).GetComponent<Animator>();
          //   allieAnimation.runtimeAnimatorController = animold as RuntimeAnimatorController;
             allieAnimation.runtimeAnimatorController = anim as RuntimeAnimatorController;
         }        
