@@ -17,7 +17,7 @@ public class Score
 
     /*
         Calulates to current score of the user acording to the relevant formula
-        by using current army (ball) count of the user
+        by using current army count and current level of the user
     */
     public void SetScore()
     {
@@ -25,6 +25,10 @@ public class Score
         int level = Gamemanager.GameManagerInstance.dataBase.currentLevel;
         currentScore = (int)(1+ (level/10.0)) * (count+1);
     }
+    /*
+        Calculates to finishing score of the user according to the 
+        relevant formula by using the finishing army count and the current level of the user
+    */
     public void ShowScore()
     {
         int count = Gamemanager.GameManagerInstance.Army.Count;
