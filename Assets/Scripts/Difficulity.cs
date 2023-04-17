@@ -2,16 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+    Difficulty class is used by GameManager and Random Level Generator 
+    classes to change road speed and road length of the overall 
+    game depending on the current level of user
+*/
 public class Difficulity
 {
-   // public float roadSpeed;
-   // public float roadLength;
-   // public int obstacleRatio;
     public Difficulity()
     {
-        //SetDifficulties();
     }
     
+    /*
+        This function sets a roadlength which is used while 
+        RandomLevelGenerator Class is building the game road.
+        At the beginning, the road length is 20 
+        however on every 4 levels it is increased by 1.
+    */
     public void SetRoadLength()
     {
         int level = Gamemanager.GameManagerInstance.dataBase.currentLevel;
@@ -20,12 +27,15 @@ public class Difficulity
         {
             if(i != 0 && i % 4 == 0)
             {
-                RandomLevelGenerator.RandomLevelGeneratorInstance.roadLength += 1;//RANDOMLEVELDE ÇAGIR
+                RandomLevelGenerator.RandomLevelGeneratorInstance.roadLength += 1;
             }
         }
-        //Gamemanager.GameManagerInstance.data
     }
 
+    /*
+        This function sets roadspeed which increases pace of the game.
+         On every 4 levels roadspeed is increased by 0.25f
+    */
     public void SetRoadSpeed()
     {
         int level = Gamemanager.GameManagerInstance.dataBase.currentLevel;
@@ -33,7 +43,7 @@ public class Difficulity
         {
             if(i != 0 && i % 4 == 0)
             {
-               Gamemanager.GameManagerInstance.RoadSpeed += 0.25f;//RANDOMLEVELDE ÇAGIR
+               Gamemanager.GameManagerInstance.RoadSpeed += 0.25f;
             }
         }
     }
