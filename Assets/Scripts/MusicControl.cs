@@ -2,27 +2,34 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+    Controls the background music and sounds of the game. 
+     There are 4 types of sounds that are used in different types of game events. 
+     These are triggered depending on the current situation of the game.
+*/
 public class MusicControl : MonoBehaviour
 {
-   // [SerializeField] GameObject backGroundMusic;
-   // [SerializeField] GameObject warMusic;
-
-    public static MusicControl musicInstance;
-
-    //private AudioSource currrentAudio;
+    public static MusicControl musicInstance; // Instance of itself
+    // Every type of sound and music is an object every sound object is managed by 
+    // the musiccontrol class instance
     [SerializeField] private GameObject backGroundMusic;
     [SerializeField] private GameObject warMusic;
     [SerializeField] private GameObject victoryMusic;
     [SerializeField] private GameObject gameOverMusic;
     private AudioSource currentAudio;
 
-    //private bool mute;
+    /*
+        Works on sound is created
+    */
     void Start()
     {
-        //mute = false;
         musicInstance = this;
     }
-
+    /*
+        Function starts to play the relevant sound effect.
+        Before starting the new sound, 
+        it silences the current playing sound and calls a new sound according to the current event music.
+    */
     public void CallSound(string type)
     {
         if(currentAudio != null)
@@ -53,12 +60,18 @@ public class MusicControl : MonoBehaviour
         }
     }
 
+    /*
+        Stops the current sound of the game
+    */
      public void StopSound()
      {
          currentAudio.Stop();
          PlayerPrefs.SetString("mute",Gamemanager.GameManagerInstance.dataBase.mute);
      }
-
+    /*
+        Controls the mute preference of the user.
+        When user switches mute button, it opens or closes all sound effects.
+    */
     public void SwitchMute()
     {
         if(Gamemanager.GameManagerInstance.dataBase.mute.Equals("true"))
@@ -73,33 +86,3 @@ public class MusicControl : MonoBehaviour
         }
     }
 }
-
-
-
-
-
-    // void Start()
-    // {
-    //     backGroundMusic = Resources.Load("Sounds/BackGroundMusic") as AudioSource;
-    //     warMusic = Resources.Load("Sounds/WarMusic") as AudioSource;
-    //     currentAudio = null;
-    //     musicInstance = this;
-    // }
-
-    // public void CallSound(string type)
-    // {
-    //     if(currentAudio != null)
-    //     {
-    //         currentAudio.Stop();
-    //     }
-    //     if(type.Equals("backgroundmusic"))
-    //     {
-    //        currentAudio =  backGroundMusic;
-    //        Debug.LogWarning("MUSIC SOUND STARTED");
-    //     }
-    //     if(type.Equals("warmusic"))
-    //     {
-    //        currentAudio =  warMusic;
-    //     }
-    //     warMusic.Play(0);
-    // }
