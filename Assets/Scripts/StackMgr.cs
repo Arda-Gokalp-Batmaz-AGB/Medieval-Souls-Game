@@ -3,31 +3,25 @@ using System.Linq;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
+
+/*
+    This class manages the collisions which are happening between the player and the obstacles on the game road.
+*/
 public class StackMgr : MonoBehaviour
 {
     private void OnTriggerEnter(Collider other)
     {
-       // print(other.tag);
-        if(other.CompareTag("obstacle"))
+        if(other.CompareTag("obstacle")) // Checks if collision happends with obstacle
         {
-            print("çarpıt");
-            Gamemanager.GameManagerInstance.Army.Remove(gameObject);
-            Gamemanager.GameManagerInstance.ReOrganiseArmy();
-            //StartCoroutine(Gamemanager.GameManagerInstance.Example());
-
+            Gamemanager.GameManagerInstance.Army.Remove(gameObject); // Army is damaged
+            Gamemanager.GameManagerInstance.ReOrganiseArmy(); // Army is reorganised
             gameObject.SetActive(false);
         }
         else
         {
-            MathOperations.PerformOperation(other);
+            MathOperations.PerformOperation(other); //If it is a gate, perform math operation on the gate
         }
-        // if(other.CompareTag("Player"))
-        //    {
-        //     print("sad");
-        // }
     }
-
-
 }
 
 
