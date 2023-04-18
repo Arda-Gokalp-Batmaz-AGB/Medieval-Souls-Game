@@ -2,23 +2,36 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System; 
+
+/*
+    This class is used in order to generate random mathematical operations 
+    which will be shown to the player on the possible ways on the gate objects. 
+*/
 public class MathFunctionGenerator
 {
     public string operationEquationText;
     public int operationResult;
-    public string opComplexity;
-    public string operationType;
-    private int operationValue;
-    private readonly int maxSUBandSUM = 10;
-    private readonly int maxDIVandMUL = 4;
-    private bool manual = false;
+    public string opComplexity; // Complexity of operation
+    public string operationType; // Holds operation type such as addition, multiplication
+    private int operationValue; // The value which will be used in the operation
+    private readonly int maxSUBandSUM = 10; // Max possible sum and sub value
+    private readonly int maxDIVandMUL = 4; // Max divisible and multiply value
+    private bool manual = false; // States if it is manually generated operation
+
+    /*
+        Constructor of the class. Creates a random math oepration with random complexity
+    */
     public MathFunctionGenerator()
     {
         manual = false;
-        ChooseOperationComplexity();
+        ChooseOperationComplexity(); // Chooses complexity of operation
         createMathematicalFunction();
     }
-
+    /*
+        Constructor with two parameters which allows set complexity and operation manually
+        @param manuelComplex "Basic" or "Complex" operation
+        @param manuelOp "add","sub","mul","div" math operations
+    */
     public MathFunctionGenerator(string manuelComplex,string manuelOp)
     {
         manual = true;
@@ -26,6 +39,10 @@ public class MathFunctionGenerator
         this.operationType = manuelOp;
         createMathematicalFunction();
     }
+
+    /*
+        Creates a new mathematical operation according to the current complexity
+    */
     public void createMathematicalFunction()
     {
         if(opComplexity == "Basic")
@@ -37,16 +54,19 @@ public class MathFunctionGenerator
             CreateBasicOperation();
         }
         else if (opComplexity == "Complex")
-        {//UNDER COSTRUCTION
+        {
              if(manual == false)
             {
             ChooseBasicOperation();
             }
             CreateBasicOperation();
         }
-       // Debug.Log(opComplexity);
         
     }
+
+    /*
+        Operations can be basic or complex. Function chooses one of them randomly
+    */
     private void ChooseOperationComplexity()
     {
         string [] opComplexityTypes = {"Basic","Complex"};
@@ -54,6 +74,9 @@ public class MathFunctionGenerator
         this.opComplexity = opComplexityTypes[temp];
     }
 
+    /*
+        Creates a basic operation by using the chosen operation type either randomly or manually
+    */
     private void CreateBasicOperation()
     {
         if(string.Equals(operationType,"add"))
@@ -74,12 +97,14 @@ public class MathFunctionGenerator
         else if (string.Equals(operationType,"div"))
         {
             this.operationValue = UnityEngine.Random.Range(2,maxDIVandMUL);
-            //this.operationValue = Gamemanager.GameManagerInstance.Balls.Count-Convert.ToInt32(Gamemanager.GameManagerInstance.Balls.Count / (operationCoefficient));
             operationEquationText = "x / "  + this.operationValue;   
         }
-       // Debug.Log(operationType);
-        //Debug.LogWarning(operationEquationText);
+
     }
+
+    /*
+        Chooses a basic oepration randomly
+    */
     private void ChooseBasicOperation()
     {
         string [] mathOps = {"add","sub","mul","div","add"};
@@ -87,7 +112,10 @@ public class MathFunctionGenerator
         string op = mathOps[temp];
         this.operationType = op;
     }
-    public int getResult()//eklencek çıkcak miktarı döner
+    /*
+        Calculates the operation result depending on the operation type and it's value
+    */
+    public int getResult()
     {
         if(string.Equals(operationType,"add"))
         {
@@ -107,44 +135,12 @@ public class MathFunctionGenerator
         }
         return operationResult;
     }
+
+    /*
+        Complex operation generator, it is under construction
+    */
     private void CreateComplexOperation()
     {
-        CreateBasicOperation();//şimdilik
+        CreateBasicOperation();
     }
 }
-
-
-
-
-
-    // private void CreateBasicOperation()
-    // {
-    //     string [] mathOps = {"add","sub","mul","div"};
-    //     int temp = UnityEngine.Random.Range(0,mathOps.Length);
-    //     string op = mathOps[temp];
-
-    //     if(string.Equals(op,"add"))
-    //     {
-    //         this.operationResult = UnityEngine.Random.Range(0,maxSUBandSUM);
-    //         operationEquationText = "x + "  + operationResult;
-    //     } 
-    //     else if (string.Equals(op,"sub"))
-    //     {
-    //         this.operationResult = UnityEngine.Random.Range(0,maxSUBandSUM);
-    //         operationEquationText = "x - "  + operationResult;
-    //     }
-    //     else if (string.Equals(op,"mul"))
-    //     {
-    //         int operationCoefficient = UnityEngine.Random.Range(1,maxDIVandMUL);
-    //         Debug.Log(Gamemanager.GameManagerInstance.Balls.Count);
-    //         this.operationResult = Gamemanager.GameManagerInstance.Balls.Count * (operationCoefficient -1);
-    //         operationEquationText = "x * "  + operationCoefficient;            
-    //     }
-    //     else if (string.Equals(op,"div"))
-    //     {
-    //         int operationCoefficient = UnityEngine.Random.Range(1,maxDIVandMUL);
-    //         this.operationResult = Convert.ToInt32(Gamemanager.GameManagerInstance.Balls.Count / (operationCoefficient));
-    //         operationEquationText = "x / "  + operationCoefficient;   
-    //     }
-    //     Debug.Log(op);
-    // }
