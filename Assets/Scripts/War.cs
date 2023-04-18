@@ -5,44 +5,58 @@ using System.Linq;
 using System.Collections;
 using TMPro;
 
+/*
+    Manages the war process which is triggering at the end of the game road. 
+    War happens between the player's army and an enemy skeleton army. 
+    The army which has a higher soldier count wins.
+*/
 public class War : MonoBehaviour
 {
-    [SerializeField] public GameObject AllocatedEnemies;
-    [SerializeField] private GameObject EnemyCountTag;
-    [SerializeField] private GameObject playerTagLoc;
-    [SerializeField] private GameObject gameOverTag;
-    [SerializeField] private GameObject levelloc;
-    [SerializeField] private GameObject muteloc;
-    public static War warInstance;
-    public List<GameObject> Enemies = new List<GameObject>();
+    [SerializeField] public GameObject AllocatedEnemies; // Max enemy count
+    [SerializeField] private GameObject EnemyCountTag; // Holds the tag which shows enemy count
+    [SerializeField] private GameObject playerTagLoc; // Holds the location which will show player's army count on the war
+    [SerializeField] private GameObject gameOverTag; // Location which gameover screen will be put
+    [SerializeField] private GameObject levelloc; // Hold the location which will show player's level on the war 
+    [SerializeField] private GameObject muteloc; // Hold the location which will show mute button on the war
+    public static War warInstance; // Instance of itself
+    public List<GameObject> Enemies = new List<GameObject>(); // Holds enemy list
 
-    private readonly int EnemyActiveCount = 11;
+    private readonly int EnemyActiveCount = 11; // Count of enemies which will be active on each process of the war
 
-    public bool startWar;
-    [SerializeField] private Camera addcam;
-    private bool isThreadExecuting = false;
+    public bool startWar; // Indicates if war is started or not
+    [SerializeField] private Camera addcam; // Special camera for the war
+    private bool isThreadExecuting = false; // Indicates if Army organiser thread is working or not
 
-    private int maxcount;
-    public bool youWillWin;
+    private int maxcount; // Max enemy count
+    public bool youWillWin; // Before war finishes, calculates that if you will win or lose the game
 
-    private bool scoreShown;
+    private bool scoreShown; // Shows score when you win the game
+
+    /*
+        On the game starts, creates an enemy skeleton army at the end of the game road.
+    */
     void Start()
     {
         warInstance = this;
         addcam.gameObject.SetActive(false);
         startWar = false;
-        //maxcount = Math.Min(33,UnityEngine.Random.Range(7,30));//20,30 / 4,15
+
+        // Calculates total enemy count
         int temp = (int) Math.Round(UnityEngine.Random.Range(5,10)*(1+ (0.05*Gamemanager.GameManagerInstance.dataBase.currentLevel)));
-        maxcount = Math.Min(33,temp);//20,30 / 4,15
-        DeActivateAllEnemies();
-        PutEnemiesToList();
-        ReOrganiseEnemies(); 
-        //FormEnemies();
+        maxcount = Math.Min(33,temp);
+
+        DeActivateAllEnemies(); // Deactivates all enemy allocations
+        PutEnemiesToList(); // Creates enemies
+        ReOrganiseEnemies(); // Organises the enemy formation
+
         gameOverTag.SetActive(false);
         scoreShown = false;
-        //WaitAnimation();
+
     }
 
+    /*
+        Calculates who will be winner by comparing army counts
+    */
     private void WhoWins()
     {
         if(Enemies.Count <= Gamemanager.GameManagerInstance.Army.Count)
@@ -54,19 +68,22 @@ public class War : MonoBehaviour
             youWillWin = false;
         }
     }
-    // Update is called once per frame
+    /*
+        While war continues, it decreases the soldiers of each army.
+    */
     void Update()
     {
-        //ReOrganiseEnemies();  
         UpdateCountTag();
         
         if(startWar == true)
         {
-            StartElimination();
+            StartElimination(); // Eliminates soldiers
         } 
  
     }
-
+    /*
+        Creates enemies
+    */
     private void PutEnemiesToList()
     {
          for (int i = 0; i < maxcount; i++)
@@ -74,14 +91,9 @@ public class War : MonoBehaviour
              Enemies.Add(AllocatedEnemies.transform.GetChild(i).gameObject);
          }
     }
-    private void AddEnemies()
-    {
-       // maxcount = maxcount - EnemyActiveCount;
-         for (int i = 0; i < maxcount; i++)
-         {
-             Enemies.Add(AllocatedEnemies.transform.GetChild(i).gameObject);
-         }
-    }
+    /*
+        Deactivates all enemies on start
+    */
     public void DeActivateAllEnemies()
     {
     for (int i = 0; i < AllocatedEnemies.transform.childCount; i++)
@@ -89,9 +101,13 @@ public class War : MonoBehaviour
             AllocatedEnemies.transform.GetChild(i).gameObject.SetActive(false);
         }
     }
+
+    /*
+        When eliminations happen in an army, it reorganises the formation of the relevant army.
+    */
     private void ReOrganiseEnemies()
     {
-        int counter = Enemies.Count;//Enemies.Count;
+        int counter = Enemies.Count;
         DeActivateAllEnemies();
         Enemies =  new List<GameObject>();
         for (int i = 0; i < AllocatedEnemies.transform.childCount; i++)
@@ -108,47 +124,45 @@ public class War : MonoBehaviour
                     counter--;
                 }
             }
-        Debug.LogWarning("DÜŞMAN DESTEK KUVVETLERİ GELDİ");
+        Debug.LogWarning("Enemy support forces come");
         
     }
-    private void FormEnemies()
-    {
-        for (int i = 0; i < AllocatedEnemies.transform.childCount; i++)
-        {
-            GameObject currentChild = AllocatedEnemies.transform.GetChild(i).gameObject;
-            if(currentChild.activeInHierarchy == false)//currentChild.GetComponent<Renderer>().enabled==false
-            {
-                currentChild.SetActive(true);
-                Gamemanager.GameManagerInstance.Army.Add(currentChild);
-            }
-        }
-    }
+    /*
+        Changes location of level indicator
+    */
     private void ReLocateLevel()
     {
         Vector3 pos2 = levelloc.transform.position;
         Gamemanager.GameManagerInstance.levelObj.transform.position = pos2;
     }
+    /*
+        Starts the war between the player's army and the enemy's army. 
+        Overall war loops such as army eliminations and animations are called in this method.
+    */
     public void StartWar()
     {
+        // Starts the war if it is not already started
         if(startWar == false)
         {
-        MusicControl.musicInstance.CallSound("warmusic");
-        ReLocateLevel();
+        MusicControl.musicInstance.CallSound("warmusic"); // War music starts
+        // Level indicator location changes
+        ReLocateLevel(); 
         Gamemanager.GameManagerInstance.levelObj.transform.parent = levelloc.transform ;
 
-       // Gamemanager.GameManagerInstance.musicObj.transform.position = new Vector3(0,0,0);
-       // Gamemanager.GameManagerInstance.musicObj.transform.parent = muteloc.transform;
-        WhoWins();
-        FormAllies();
-        ReLocatePlayerTag();
+        WhoWins(); // Calculates who will be winner
+        InteractArmies(); // Forms the armies
+        ReLocatePlayerTag(); // Changes location of player army count indicator
         startWar = true;
         Gamemanager.GameManagerInstance.organiserTime = 0;
-        WaitAnimation();
+        WaitAnimation(); // Idle animation
         }     
     }
-    public void FormAllies()
+
+    /*
+        Interacts armies with each other by performing their war animations
+    */
+    public void InteractArmies()
     {
-        //Gamemanager.GameManagerInstance.mainCam.setactive;
         addcam.gameObject.SetActive(true);
         for (int i = 0; i < EnemyActiveCount; i++)
         {
@@ -181,24 +195,27 @@ public class War : MonoBehaviour
 
             Vector3 newPos =  AllocatedEnemies.transform.GetChild(j).gameObject.transform.position;
             newPos = new Vector3(newPos.x,newPos.y,newPos.z-dist);
-            //Vector3 newPos = new Vector3(20,0,20);
 
             currentChild.transform.position = newPos;
             j++;
         }
     }
 
+    /*
+        Changes location of player count
+    */
     private void ReLocatePlayerTag()
     {
         Vector3 pos = playerTagLoc.transform.position;
         Gamemanager.GameManagerInstance.PlayerCountTag.transform.position = pos;
         Vector3 scale = new Vector3(6.5f,7.1f,5f);
         Gamemanager.GameManagerInstance.PlayerCountTag.transform.localScale = scale;
-       // ReLocateLevel();
 
     }
 
-
+    /*
+        Updates enemy count
+    */
     private void UpdateCountTag()
     {
         TextMeshPro textmeshPro = EnemyCountTag.GetComponent<TextMeshPro>();
@@ -208,7 +225,9 @@ public class War : MonoBehaviour
         }
         
     }
-
+    /*
+        Army elimination is working on a thread coroutine and this method calls relevant coroutine.
+    */
     private void StartElimination()
     {
         if(isThreadExecuting == false)
@@ -216,6 +235,11 @@ public class War : MonoBehaviour
         StartCoroutine(this.Organiser());
         }
     }
+
+    /*
+        After every elimination of the armies, this threading method reorganizes the formation of the armies.
+        It also controls if the soldier counts reached 0 on one of the armies, if so triggers game-over conditions.
+    */
     public IEnumerator Organiser()
     {
         isThreadExecuting=true;
@@ -223,7 +247,7 @@ public class War : MonoBehaviour
         yield return new WaitForSeconds(2);
 
         print("method runs");
-        WaitAnimation();//////////////////
+        WaitAnimation();
         int loopCount = EnemyActiveCount;
         for (int i = 0; i < loopCount; i++)
         {
@@ -239,6 +263,7 @@ public class War : MonoBehaviour
             Gamemanager.GameManagerInstance.Army.Remove(currentAllie);
             Enemies.Remove(currentEnemy);
         }
+        // Triggers when one of the army count is reached to 0
         if(Enemies.Count<=0 || Gamemanager.GameManagerInstance.Army.Count <= 0)
         {
            UpdateCountTag(); 
@@ -249,14 +274,13 @@ public class War : MonoBehaviour
            Gamemanager.GameManagerInstance.gameWon = true;
            Gamemanager.GameManagerInstance.StartTheGame = false;
            GameObject maincam = Gamemanager.GameManagerInstance.mainCam.transform.gameObject;
-           //Vector3 pos = EnemyCountTag.transform.position;
-           //pos = new Vector3(pos.x,pos.y+10,pos.z-5);
            Vector3 pos = addcam.transform.position;
            maincam.transform.position = pos;
 
            Gamemanager.GameManagerInstance.PlayerCountTag.SetActive(false);
            EnemyCountTag.SetActive(false);
           TextMeshPro textmeshPro = gameOverTag.GetComponent<TextMeshPro>();
+          // Triggers when enemy count reaches 0 which also indicates player won the war
            if(youWillWin == true)
            {
                if(scoreShown == false)
@@ -268,40 +292,35 @@ public class War : MonoBehaviour
                textmeshPro.SetText("<uppercase>VICTORY! \n Score: <uppercase>" + Gamemanager.GameManagerInstance.score.currentScorelast);
                Gamemanager.GameManagerInstance.restartButton.transform.GetChild(0).gameObject.GetComponent<TextMeshPro>().fontSize = 1.3f;
                Gamemanager.GameManagerInstance.restartButton.transform.GetChild(0).gameObject.GetComponent<TextMeshPro>().SetText("<uppercase>Next Level<uppercase>");
-              // TextMeshPro rsChange = Gamemanager.GameManagerInstance.restartButton.transform.GetChild(0).gameObject.GetComponent<TextMeshPro>();
            }
-           else
+           else // If not it indicates that player's army is lose
            {
                textmeshPro.SetText("<uppercase><color=#FF0000>GAME OVER <uppercase></color>");
-              // MusicControl.musicInstance.CallSound("gameovermusic");
-               //MusicControl.musicInstance.StopSound();
                Debug.LogWarning("SOUND STOPED");
            }
            gameOverTag.SetActive(true);
            ReLocateLevel();
-          // MusicControl.musicInstance.StopSound();
         }
-       // else
-      //  {
-       // maxcount -= 10;
-       // AddEnemies();
+
+        // Continues to organize armies while war is proceeding.
         UpdateCountTag(); 
         ReOrganiseEnemies();
         Gamemanager.GameManagerInstance.ReOrganiseArmy();
-        //UpdateCountTag();
         isThreadExecuting = false;
-      //  }
         WaitAnimation();
 
     }
 
+    /*
+        Stops attack operations of the armies when game is finished
+    */
     private void StopAttackAnimations()
     {
         var anim = Resources.Load("Infantry 4");//2
         for (int i = 0; i < AllocatedEnemies.transform.childCount; i++)
         {
             Animator EnemyAnimation = AllocatedEnemies.transform.GetChild(i).GetComponent<Animator>();
-            EnemyAnimation.runtimeAnimatorController = anim as RuntimeAnimatorController;//Resources.Load("Infantary 2")
+            EnemyAnimation.runtimeAnimatorController = anim as RuntimeAnimatorController;
         }
 
         for (int i = 0; i < Gamemanager.GameManagerInstance.Army.Count; i++)
@@ -311,42 +330,23 @@ public class War : MonoBehaviour
         }
     }
 
+    /*
+        Performs idle animation of soldiers
+    */
     private void WaitAnimation()
     {
         var anim = Resources.Load("Infantry_4");//3
-        //var animold = Resources.Load("Infantary 1");
         for (int i = EnemyActiveCount; i < AllocatedEnemies.transform.childCount; i++)
         {
             Animator EnemyAnimation = AllocatedEnemies.transform.GetChild(i).GetComponent<Animator>();
-           // EnemyAnimation.runtimeAnimatorController = animold as RuntimeAnimatorController;//Resources.Load("Infantary 2")
-            EnemyAnimation.runtimeAnimatorController = anim as RuntimeAnimatorController;//Resources.Load("Infantary 2")
+            EnemyAnimation.runtimeAnimatorController = anim as RuntimeAnimatorController;
         }
 
         for (int i = EnemyActiveCount; i < Gamemanager.GameManagerInstance.Army.Count; i++)
         {
             Animator allieAnimation = Gamemanager.GameManagerInstance.AllocatedArmy.transform.GetChild(i).GetComponent<Animator>();
-         //   allieAnimation.runtimeAnimatorController = animold as RuntimeAnimatorController;
             allieAnimation.runtimeAnimatorController = anim as RuntimeAnimatorController;
         }        
     }
 
 }
-
-
-
-
-
-
-    // private void DecideResult()
-    // {
-    //     if(Gamemanager.GameManagerInstance.Balls.Count <=0)
-    //     {
-
-    //     }
-    //     if(Enemies.Count <=0)
-    //     {
-    //         Gamemanager.GameManagerInstance.gameWon = true;
-    //         Gamemanager.GameManagerInstance.StartTheGame = false;
-    //         print("YOU WON THE GAME!!!");            
-    //     }
-    // }
