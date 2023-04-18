@@ -474,7 +474,7 @@ GameObject:
   m_Component:
   - component: {fileID: 11812354}
   m_Layer: 0
-  m_Name: AllocatedBalls
+  m_Name: AllocatedArmy
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -21785,7 +21785,7 @@ MonoBehaviour:
   SwipeSpeed: 12
   Distance: 4
   Road: {fileID: 616717986}
-  AllocatedBalls: {fileID: 11812353}
+  AllocatedArmy: {fileID: 11812353}
   PlayerCountTag: {fileID: 376704897}
   restartButton: {fileID: 1150382567}
   levelTag: {fileID: 1199520512}
@@ -21794,8 +21794,8 @@ MonoBehaviour:
   highestScoreTag: {fileID: 1266923110}
   musicObj: {fileID: 1281818525}
   mainCam: {fileID: 0}
-  Balls: []
-  Newball: {fileID: 8418676647072808755, guid: 848aa7bedcadb6d46a6f10ec3bdbd6a5, type: 3}
+  Army: []
+  NewSoldier: {fileID: 0}
   Explosion: {fileID: 9110059426687527477, guid: 35e2e85a7a5fe4e48b1e38a6805b7f41, type: 3}
   gameWon: 0
   stopMovement: 0
